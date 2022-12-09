@@ -9,15 +9,42 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import timeout from "connect-timeout";
-
 import youtube from "youtube-api";
 import open from "open";
+// import credentials from "./credentials.json" assert {type: "json"};
 
-import credentials from "./credentials.json" assert {type: "json"};
+// import ("./credentials.json", {type:"json"});
+// let express = require("express");
+// let cors = require("cors");
+// let multer = require("multer");
+
+// let connectDB = require("./Database/ConnectDB");
+// let dotenv = require("dotenv");
+// let fs = require("fs");
+// let path= require("path");
+// let timeout = require("connect-timeout");
+// let youtube = require("youtube-api");
+// let open = require("open");
+
+// let credentials= require("./credentials.json");
 
 
-
-
+const credentials = {
+    "web": {
+        "client_id": "242409723072-2rul1li0cn9qbs96nt39prsvanjopooo.apps.googleusercontent.com",
+        "project_id": "my-project-370812",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "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",
+        "redirect_uris": [
+            "http://localhost:4000/oauth2callback"
+        ],
+        "javascript_origins": [
+            "http://localhost:4000"
+        ]
+    }
+}
 
 const oAuth = youtube.authenticate({
     type: "oauth",
@@ -56,7 +83,8 @@ app.use("/upload", express.static("./upload"));
 // .......start route update of profile pic.........
 app.post("/uploadvideo", upload.single("videoFile"), async (req, res) => {
     try {
-        console.log(re.body);
+        console.log(req.body);
+        console.log(req.file);
         if(req.file){
             const filename = req.file.filename;
             const {title,description} = req.body;
@@ -69,6 +97,7 @@ app.post("/uploadvideo", upload.single("videoFile"), async (req, res) => {
                 })
             }))
         }
+        console.log("request processed");
 
 
     } catch (error) {

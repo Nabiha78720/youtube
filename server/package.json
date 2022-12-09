@@ -23,5 +23,8 @@
     "open": "^8.4.0",
     "uuid": "^9.0.0",
     "youtube-api": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-import-assertions": "^7.20.0"
   }
 }
