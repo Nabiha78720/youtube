@@ -66,6 +66,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.static("./build"));
 
 connectDB(urlDB);
@@ -85,15 +86,15 @@ app.post("/uploadvideo", upload.single("videoFile"), async (req, res) => {
     try {
         console.log(req.body);
         console.log(req.file);
-        if(req.file){
+        if (req.file) {
             const filename = req.file.filename;
-            const {title,description} = req.body;
-         
+            const { title, description } = req.body;
+
             open(oAuth.generateAuthUrl({
                 access_type: "offline",
                 scope: "https://www.googleapis.com/auth/youtube.upload",
                 state: JSON.stringify({
-                    filename,title,description 
+                    filename, title, description
                 })
             }))
         }
@@ -109,27 +110,27 @@ app.post("/uploadvideo", upload.single("videoFile"), async (req, res) => {
     }
 });
 
-app.get("/oauth2callback", (req,res)=>{
+app.get("/oauth2callback", (req, res) => {
     console.log("route called");
     res.redirect("http://localhost:3000/success");
-    const {filename,title,description} = JSON.parse(req.query.state);
+    const { filename, title, description } = JSON.parse(req.query.state);
 
-    oAuth.getToken(req.query.code,(err,token)=>{
-        if(err){
+    oAuth.getToken(req.query.code, (err, token) => {
+        if (err) {
             console.log(err);
             return
         }
         oAuth.setCredentials(token);
         youtube.video.insert({
-             resource:{
-                snippet:{title,description},
-                status:{privacyStatus:"private"}
-             },
-             part:"snippet,status",
-             media:{
-                body:fs.createReadStream(filename)
-             }
-        },(err,data)=>{
+            resource: {
+                snippet: { title, description },
+                status: { privacyStatus: "private" }
+            },
+            part: "snippet,status",
+            media: {
+                body: fs.createReadStream(filename)
+            }
+        }, (err, data) => {
             console.log("done");
             process.exit();
         })
